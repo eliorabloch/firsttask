@@ -10,7 +10,7 @@ namespace part1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("hello liel");
+            Console.WriteLine("hello world");
         }
     }
 }
