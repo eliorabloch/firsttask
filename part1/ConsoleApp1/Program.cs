@@ -14,7 +14,7 @@ namespace part2
             capacity = new bool[12, 31];// matrix of hotel capacity
             for(int i=0; i<12;i++)//This for fills the array with false values
             {
-                for(int j=0; j<31; j++)
+                for(int j=1; j<31; j++)
                 {
                     capacity[i, j] = false;
                 }
@@ -87,19 +87,30 @@ namespace part2
                                 Console.WriteLine("Sorry, we can not handle this problem.");
                                 return;
                             }
-                            
-                            if((amount==2)&&(capacity[day,month]))//If 2 days are taken the costumer can still reserve the first or the second day. 
+                            int saveAmount = amount;
+                            int newAmount=0;
+                            int newMonth=0;
+                            if (day+amount>31)
                             {
-                                Console.WriteLine("The request has been answerred");
-                                break;
+                             amount = 31 - day;//חודש נוכחי
+                             newAmount = saveAmount - amount;//חודש הבא
+                             newMonth = month + 1;
                             }
+
+                            //if ((amount == 2) && (capacity[day, month]))//If 2 days are taken the costumer can still reserve the first or the second day. 
+                            //{
+                            //    Console.WriteLine("The request has been answerred");
+                            //    break;
+                            //}
+
                             bool available = false;
-                            if (!capacity[day+1, month])// If the room ia availeble we will enter the for.
+                            int forSum = 0;
+                            
+                            if (!capacity[month,day+1])// If the room ia availeble we will enter the for.
                             {
-                                int forSum = 0;
                                 for (int i = 0; i < amount-1; i++)//We will check that we have the room availeble for the whole amount that the costumer requested. Amount-1 is because if the last day is taken it is dose not matter.
                                 {
-                                    if (capacity[day + i, month])
+                                    if (capacity[month,day + i])
                                     {
                                         Console.WriteLine("Sorry, the request has been denighd.");
                                         forSum = i;
@@ -115,29 +126,114 @@ namespace part2
                             {
                                 Console.WriteLine("Sorry, the request has been denighd.");
                             }
-                            if (available)// This is where we update the capacity.
+
+                            bool available2 = false;
+                            if (available)
+                            {
+                                for (int i = 0; i < newAmount - 1; i++)//We will check that we have the room availeble for the whole amount that the costumer requested. Amount-1 is because if the last day is taken it is dose not matter.
+                                {
+                                    if (capacity[newMonth, day + i])
+                                    {
+                                        Console.WriteLine("Sorry, the request has been denighd.");
+                                        forSum = i;
+                                        break;
+                                    }
+                                }
+                                if (forSum == amount - 2 || forSum == 0)// If none of the days were taken (not including the first and the last), we will update the available flag to be true. 
+                                {
+                                    available2 = true;
+                                }
+                            }
+                            if (available && available2)// This is where we update the capacity.
                             {
                                 for (int i = 0; i < amount; i++)
                                 {
-                                    capacity[day + i, month] = true;
+                                    capacity[month, day + i] = true;
+                                }
+                                for (int i = 1; i < newAmount+1; i++)
+                                {
+                                    capacity[newMonth,i] = true;
                                 }
                                 Console.WriteLine("The request has been answerred" );
                             }
+                            if (newMonth == 0)// if it only one month.
+                            {
+                                for (int i = 0; i < amount; i++)
+                                {
+                                    capacity[month, day + i] = true;
+                                }
+                            }
+                            //if the custumer orderd more then one month, we will put true mark on the 31st of the first month he picked.
+                            //if the 31st is the first day he orderd, we will do nothing.
+                          //  {
+                              //  if (day != 31)
+                               // {
+                               //     capacity[month, 31] = true;
+                                //}
+                          //  }//
                             break;
                         }
                     case ConsoleKey.D2:
                         {
+                            Console.WriteLine();
+                            for (int i=1;i<12;i++)
+                            {
+                                for (int j = 1; j < 31; j++)
+                                {
+                                    if (capacity[i, j])
+                                    {
+                                        Console.WriteLine("First day of stay: ");
+                                        Console.WriteLine("Month: ");
+                                        Console.WriteLine(i);
+                                        Console.WriteLine("Day: ");
+                                        Console.WriteLine(j);
+                                        Console.WriteLine("Last day of stay: ");
+                                    
+                                        j++; 
+                                        while (capacity[i, j])
+                                        {
+                                            j++;
+                                        }
+                                        Console.WriteLine("Month: ");
+                                        Console.WriteLine(i);
+                                        Console.WriteLine("Day: ");
+                                        Console.WriteLine(j - 1);
+                                    }
+
+                                }
+                            }
                             break;
                         }
                     case ConsoleKey.D3:
                         {
+                            Console.WriteLine();
+                            int counter = 0;
+                            for (int i=0; i<11; i++)
+                            {
+                                for (int j=0;j<30; j++)
+                                {
+                                    if(capacity[i,j])
+                                    {
+                                        counter++;
+                                    }
+                                }
+                            }
+                            Console.WriteLine("The amount of taken days: ");
+                            Console.WriteLine(counter);
+                            Console.WriteLine("The precentege of the yearly capacity: ");
+                            double precent = 0;
+                              precent=  ((double)counter/365) * (100);
+                            Console.WriteLine(precent);
                             break;
                         }
                     case ConsoleKey.D4:
                         {
                             finishRun = false;
                             Console.WriteLine();
-                            break;
+                            Console.WriteLine("thanx for using our hotel services,we hope you enjoy your stay!");
+                            Console.WriteLine("have a nice day");
+                            Console.ReadKey();
+                            return;
                         }
                     default:
                             Console.WriteLine(" Please enter a valid number.");
