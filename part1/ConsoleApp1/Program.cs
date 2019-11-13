@@ -42,15 +42,17 @@ namespace part2
                             int day,day2;
                             bool succeedDay = int.TryParse(costumerDay, out day);
                             bool succeedDay2 = true;
+                            day -= 1;
                             if (succeedDay)
                             {
-                                while ((day > 31 || day < 1)&&(succeedDay2))
+                                while ((day > 30 || day < 0)&&(succeedDay2))
                                 {
                                     
                                     Console.WriteLine("You enteted an auvalid day, please enter a correct number.");
                                     string costumerDay2 = Console.ReadLine();
                                     succeedDay2 = int.TryParse(costumerDay2, out day2);
                                     day = day2;
+                                    day -= 1;
                                 } 
                             }
                             else
@@ -63,14 +65,16 @@ namespace part2
                             int month, month2;
                             bool succeedMonth = int.TryParse(costumerMonth, out month);
                             bool succeedMonth2 = true;
+                            month -= 1;
                             if (succeedMonth)
                             {
-                                while ((month > 12 || month < 1) && (succeedMonth2))
+                                while ((month > 11 || month < 0) && (succeedMonth2))
                                 {
                                     Console.WriteLine("You enteted an auvalid day, please enter a correct number.");
                                     string costumerMonth2 = Console.ReadLine();
                                     succeedMonth2 = int.TryParse(costumerMonth2, out month2);
                                     month = month2;
+                                    month -= 1;
                                 }
                             }
                             else
@@ -90,7 +94,7 @@ namespace part2
                             int saveAmount = amount;
                             int newAmount=0;
                             int newMonth=0;
-                            if (day+amount>31)
+                            if (day+amount>30)
                             {
                              amount = 31 - day;//חודש נוכחי
                              newAmount = saveAmount - amount;//חודש הבא
@@ -176,28 +180,32 @@ namespace part2
                     case ConsoleKey.D2:
                         {
                             Console.WriteLine();
-                            for (int i=1;i<12;i++)
+                            for (int i=0;i<12;i++)
                             {
-                                for (int j = 1; j < 31; j++)
+                                for (int j = 0; j < 31; j++)
                                 {
                                     if (capacity[i, j])
                                     {
                                         Console.WriteLine("First day of stay: ");
                                         Console.WriteLine("Month: ");
-                                        Console.WriteLine(i);
+                                        Console.WriteLine(++i);
                                         Console.WriteLine("Day: ");
-                                        Console.WriteLine(j);
+                                        Console.WriteLine(++j);
                                         Console.WriteLine("Last day of stay: ");
-                                    
+                                        --i;--j;
+
+
                                         j++; 
                                         while (capacity[i, j])
                                         {
                                             j++;
                                         }
                                         Console.WriteLine("Month: ");
-                                        Console.WriteLine(i);
+                                        Console.WriteLine(++i);
                                         Console.WriteLine("Day: ");
-                                        Console.WriteLine(j - 1);
+                                        Console.WriteLine(j);
+                                        --j;
+                                        --i;
                                     }
 
                                 }
