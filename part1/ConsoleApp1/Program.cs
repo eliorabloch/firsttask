@@ -1,4 +1,9 @@
-﻿using System;
+﻿//eliora bloch 206343501
+//liel orenstein 209220730
+
+/*this program runns orders for a hotel. it reserves room, checks hotels capacity,and more..*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,18 +17,18 @@ namespace part2
         {
             bool[,] capacity;
             capacity = new bool[12, 31];// matrix of hotel capacity
-            for(int i=0; i<12;i++)//This for fills the array with false values
+            for (int i = 0; i < 12; i++)//This for fills the array with false values
             {
-                for(int j=1; j<31; j++)
+                for (int j = 1; j < 31; j++)
                 {
                     capacity[i, j] = false;
                 }
             }
-            bool finishRun=true;
+            bool finishRun = true;
             while (finishRun)// This while capsules the switch.
             {
                 Console.WriteLine();
-                Console.WriteLine("hello, please chose a number from 1 to 4: ");
+                Console.WriteLine("hello, welcome, please choose a number from 1 to 4: ");
                 Console.WriteLine("1- check availability.");
                 Console.WriteLine("2- show hotel capacity.");
                 Console.WriteLine("3- show yearly capacity percentige.");
@@ -32,34 +37,35 @@ namespace part2
                 ConsoleKeyInfo choice = Console.ReadKey();//cin a number from the keybord. (if it is not number from 1-4 it will go into error defult).
                 switch (choice.Key)
                 {
-                    case ConsoleKey.D1:// This case take a reservation from the customer if the room ia availeble, if not- it will inform him.
+                    case ConsoleKey.D1:// This case takes a reservation from the customer if the room is availeble, if not- it will inform him.
                         {
                             Console.WriteLine();
                             Console.WriteLine("Please enter the date you want to reserve.");
                             Console.WriteLine("Day: ");
                             //we will cin a key by the customer (on day, month, amount). We will parse it into an int, and we will also check that the numbers are in the corrent range.
                             string costumerDay = Console.ReadLine();
-                            int day,day2;
-                            bool succeedDay = int.TryParse(costumerDay, out day);
+                            int day, day2;
+                            bool succeedDay = int.TryParse(costumerDay, out day);//we check if the parsing went well.
                             bool succeedDay2 = true;
-                            day -= 1;
+                            day -= 1;// we will remove 1 from the day number,because the array starts from 0.
                             if (succeedDay)
                             {
-                                while ((day > 30 || day < 0)&&(succeedDay2))
+                                while ((day > 30 || day < 0) && (succeedDay2))//we check that the day is in the range.
                                 {
-                                    
-                                    Console.WriteLine("You enteted an auvalid day, please enter a correct number.");
+
+                                    Console.WriteLine("You have entered an invalid day, please enter a correct number.");
                                     string costumerDay2 = Console.ReadLine();
                                     succeedDay2 = int.TryParse(costumerDay2, out day2);
                                     day = day2;
                                     day -= 1;
-                                } 
+                                }
                             }
                             else
                             {
-                                Console.WriteLine("Sorry, we can not handle this problem.");
+                                Console.WriteLine("Sorry, we can not handle this problem.");//this is incase the custumor entered somthing other then a number.
                                 return;
                             }
+                            //here we do for the month the exact things we did for the day.
                             Console.WriteLine("Month: ");
                             string costumerMonth = Console.ReadLine();
                             int month, month2;
@@ -70,7 +76,7 @@ namespace part2
                             {
                                 while ((month > 11 || month < 0) && (succeedMonth2))
                                 {
-                                    Console.WriteLine("You enteted an auvalid day, please enter a correct number.");
+                                    Console.WriteLine("You have entered an invalid day, please enter a correct number.");
                                     string costumerMonth2 = Console.ReadLine();
                                     succeedMonth2 = int.TryParse(costumerMonth2, out month2);
                                     month = month2;
@@ -86,42 +92,38 @@ namespace part2
                             string amountOfDays = Console.ReadLine();
                             int amount;
                             bool succeedAmount = int.TryParse(amountOfDays, out amount);
-                            if(!succeedAmount)
+                            if (!succeedAmount)
                             {
                                 Console.WriteLine("Sorry, we can not handle this problem.");
                                 return;
                             }
                             int saveAmount = amount;
-                            int newAmount=0;
-                            int newMonth=0;
-                            if (day+amount>30)
+                            int newAmount = 0;
+                            int newMonth = 0;
+                            if (day + amount > 30)//here we check if we have on order that takes place in two monthes or more.
                             {
-                             amount = 31 - day;//חודש נוכחי
-                             newAmount = saveAmount - amount;//חודש הבא
-                             newMonth = month + 1;
+                                amount = 31 - day;//accurate month
+                                newAmount = saveAmount - amount;//next month
+                                newMonth = month + 1;
                             }
 
-                            //if ((amount == 2) && (capacity[day, month]))//If 2 days are taken the costumer can still reserve the first or the second day. 
-                            //{
-                            //    Console.WriteLine("The request has been answerred");
-                            //    break;
-                            //}
+
 
                             bool available = false;
                             int forSum = 0;
-                            
-                            if (!capacity[month,day+1])// If the room ia availeble we will enter the for.
+
+                            if (!capacity[month, day])// If the room ia availeble we will enter the for.
                             {
-                                for (int i = 0; i < amount-1; i++)//We will check that we have the room availeble for the whole amount that the costumer requested. Amount-1 is because if the last day is taken it is dose not matter.
+                                for (int i = 0; i < amount - 1; i++)//We will check that we have the room availeble for the whole amount that the costumer requested. Amount-1 is because if the last day is taken it is dose not matter.
                                 {
-                                    if (capacity[month,day + i])
+                                    if (capacity[month, day + i])
                                     {
                                         Console.WriteLine("Sorry, the request has been denighd.");
                                         forSum = i;
                                         break;
                                     }
                                 }
-                                if (forSum == amount-2|| forSum == 0)// If none of the days were taken (not including the first and the last), we will update the available flag to be true. 
+                                if (forSum == amount - 2 || forSum == 0)// If none of the days were taken (not including the first and the last), we will update the available flag to be true. 
                                 {
                                     available = true;
                                 }
@@ -148,57 +150,64 @@ namespace part2
                                     available2 = true;
                                 }
                             }
+
+                            //we will go in to this if incase we have an order of more then one month.
                             if (available && available2)// This is where we update the capacity.
                             {
                                 for (int i = 0; i < amount; i++)
                                 {
                                     capacity[month, day + i] = true;
                                 }
-                                for (int i = 1; i < newAmount+1; i++)
+                                for (int i = 1; i < newAmount + 1; i++)
                                 {
-                                    capacity[newMonth,i] = true;
+                                    capacity[newMonth, i] = true;
                                 }
-                                Console.WriteLine("The request has been answerred" );
+                                Console.WriteLine("The request has been answerred");
                             }
-                            if (newMonth == 0)// if it only one month.
+                            if (newMonth == 0)// if its only one month.
                             {
                                 for (int i = 0; i < amount; i++)
                                 {
                                     capacity[month, day + i] = true;
                                 }
                             }
-                            //if the custumer orderd more then one month, we will put true mark on the 31st of the first month he picked.
-                            //if the 31st is the first day he orderd, we will do nothing.
-                          //  {
-                              //  if (day != 31)
-                               // {
-                               //     capacity[month, 31] = true;
-                                //}
-                          //  }//
+
                             break;
                         }
+                    //case two will show the custumor all the taken days,in a list.
                     case ConsoleKey.D2:
                         {
                             Console.WriteLine();
-                            for (int i=0;i<12;i++)
+                            for (int i = 0; i < 12; i++)
                             {
                                 for (int j = 0; j < 31; j++)
                                 {
-                                    if (capacity[i, j])
+                                    if (capacity[i, j])//it will enter this if if the matrix has true on this day and month
                                     {
                                         Console.WriteLine("First day of stay: ");
                                         Console.WriteLine("Month: ");
-                                        Console.WriteLine(++i);
+                                        Console.WriteLine(++i);//we  do ++ because we did -- at the begining,do to the matrix starting from 0
                                         Console.WriteLine("Day: ");
-                                        Console.WriteLine(++j);
+                                        Console.WriteLine(++j);// same as ++i.
                                         Console.WriteLine("Last day of stay: ");
-                                        --i;--j;
+                                        --i; --j;
 
 
-                                        j++; 
-                                        while (capacity[i, j])
+
+
+
+
+
+
+                                        while (capacity[i, j])//as long as we still have true, have the days ++.
                                         {
+                                            if (j == 30 && i != 12)
+                                            {
+                                                i++;
+                                                j = 1;
+                                            }
                                             j++;
+
                                         }
                                         Console.WriteLine("Month: ");
                                         Console.WriteLine(++i);
@@ -212,17 +221,18 @@ namespace part2
                             }
                             break;
                         }
+                    //case 3 checks the hotell capacity yearly percentige. and prints it out to the custumor.
                     case ConsoleKey.D3:
                         {
                             Console.WriteLine();
                             int counter = 0;
-                            for (int i=0; i<11; i++)
+                            for (int i = 0; i < 11; i++)
                             {
-                                for (int j=0;j<30; j++)
+                                for (int j = 0; j < 30; j++)
                                 {
-                                    if(capacity[i,j])
+                                    if (capacity[i, j])
                                     {
-                                        counter++;
+                                        counter++;// the counter will count how many days are taken.
                                     }
                                 }
                             }
@@ -230,10 +240,11 @@ namespace part2
                             Console.WriteLine(counter);
                             Console.WriteLine("The precentege of the yearly capacity: ");
                             double precent = 0;
-                              precent=  ((double)counter/365) * (100);
+                            precent = ((double)counter / 365) * (100);
                             Console.WriteLine(precent);
                             break;
                         }
+                    //this case is the exit case.
                     case ConsoleKey.D4:
                         {
                             finishRun = false;
@@ -244,12 +255,113 @@ namespace part2
                             return;
                         }
                     default:
-                            Console.WriteLine(" Please enter a valid number.");
-                            break;
+                        Console.WriteLine(" Please enter a valid number.");
+                        break;
                 }
             }
-           
+
         }
-        
+
     }
 }
+
+/*
+hello, welcome, please choose a number from 1 to 4:
+1- check availability.
+2- show hotel capacity.
+3- show yearly capacity percentige.
+4- exit.
+
+1
+Please enter the date you want to reserve.
+Day:
+1
+Month:
+1
+Please enter the amount of days for your stay.
+4
+The request has been answerred
+
+hello, welcome, please choose a number from 1 to 4:
+1- check availability.
+2- show hotel capacity.
+3- show yearly capacity percentige.
+4- exit.
+
+1
+Please enter the date you want to reserve.
+Day:
+1
+Month:
+1
+Please enter the amount of days for your stay.
+3
+Sorry, the request has been denighd.
+
+hello, welcome, please choose a number from 1 to 4:
+1- check availability.
+2- show hotel capacity.
+3- show yearly capacity percentige.
+4- exit.
+
+1
+Please enter the date you want to reserve.
+Day:
+4
+Month:
+6
+Please enter the amount of days for your stay.
+9
+The request has been answerred
+
+hello, welcome, please choose a number from 1 to 4:
+1- check availability.
+2- show hotel capacity.
+3- show yearly capacity percentige.
+4- exit.
+
+2
+First day of stay:
+Month:
+1
+Day:
+1
+Last day of stay:
+Month:
+1
+Day:
+4
+First day of stay:
+Month:
+6
+Day:
+4
+Last day of stay:
+Month:
+6
+Day:
+12
+
+hello, welcome, please choose a number from 1 to 4:
+1- check availability.
+2- show hotel capacity.
+3- show yearly capacity percentige.
+4- exit.
+
+3
+The amount of taken days:
+13
+The precentege of the yearly capacity:
+3.56164383561644
+
+hello, welcome, please choose a number from 1 to 4:
+1- check availability.
+2- show hotel capacity.
+3- show yearly capacity percentige.
+4- exit.
+
+4
+thanx for using our hotel services,we hope you enjoy your stay!
+have a nice day
+*/
+
